@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>하루무역 | 매일 한 편, 무역 공부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EEF2F4; --surface:#FFFFFF; --ink:#14233A; --muted:#5A6B7E; --line:#C9D3DC;
+  --steel:#2B5C8A; --red:#B23A30; --green:#2F6B4F; --yellow:#D99A1E; --teal:#1F7A86; --plum:#6A4A84; --slate:#4B5B6E; --rust:#9A5A2A;
+  --plate:#14233A; --plate-ink:#F2F5F7;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A28; --surface:#16243A; --ink:#E6ECF2; --muted:#9AAABB; --line:#2B3D55;
+    --plate:#E6ECF2; --plate-ink:#0F1A28;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A28; --surface:#16243A; --ink:#E6ECF2; --muted:#9AAABB; --line:#2B3D55;
+  --plate:#E6ECF2; --plate-ink:#0F1A28;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:env(safe-area-inset-top,0px);z-index:10}
+header.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
+.logo{font-family:"Black Han Sans","IBM Plex Sans KR",sans-serif;font-size:24px;text-decoration:none;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.logo i{display:inline-flex;gap:2px}
+.logo i b{width:6px;height:18px;border-radius:1px;display:block}
+.top .grow{flex:1}
+.search{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 12px;width:min(240px,40vw)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.small{padding:4px 10px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* hero: container door plate */
+.hero{padding:40px 0 28px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:stretch}
+.door{background:var(--steel);border-radius:6px;position:relative;padding:28px 28px 28px 52px;color:#fff;text-decoration:none;display:block;overflow:hidden;min-height:300px;
+  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 14px,rgba(0,0,0,.08) 14px 28px)}
+.door::before{content:"";position:absolute;left:16px;top:20px;bottom:20px;width:10px;border:2px solid rgba(255,255,255,.55);border-radius:3px}
+.door .code{font-family:"Black Han Sans",sans-serif;font-size:clamp(34px,6vw,58px);line-height:1;letter-spacing:2px}
+.door .code small{font-size:.45em;vertical-align:top;margin-left:8px;border:2px solid #fff;padding:2px 6px}
+.door .meta{margin-top:10px;font-size:14px;opacity:.85}
+.door h1{font-size:clamp(24px,3.4vw,34px);line-height:1.35;margin:26px 0 10px;font-weight:700;max-width:22ch}
+.door p{margin:0;opacity:.92;max-width:44ch}
+.door .open{display:inline-block;margin-top:20px;background:#fff;color:#14233A;font-weight:700;padding:8px 16px;border-radius:6px}
+.side{display:flex;flex-direction:column;gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px}
+.card h2{font-size:16px;margin:0 0 10px}
+.term-word{font-size:22px;font-weight:700;margin:0}
+.term-mean{color:var(--muted);margin:6px 0 0;font-size:15px;line-height:1.65}
+.cal{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin-top:6px}
+.cal span{aspect-ratio:1;border-radius:2px;background:var(--line);display:block}
+.streak{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-top:10px}
+.streak strong{color:var(--ink);font-size:18px}
+
+/* categories */
+.cats{display:flex;gap:8px;flex-wrap:wrap;padding:8px 0 20px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;gap:8px}
+.chip .dot{width:9px;height:9px;border-radius:2px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+.list{display:grid;gap:0;border-top:2px solid var(--ink);margin-bottom:60px}
+.row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:20px;padding:20px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.row:hover h3{text-decoration:underline;text-underline-offset:4px}
+.row .d{font-size:14px;color:var(--muted);line-height:1.4}
+.row .d b{display:block;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:26px;color:var(--ink)}
+.row h3{margin:4px 0 4px;font-size:20px;line-height:1.45}
+.row p{margin:0;color:var(--muted);font-size:15px}
+.tag{font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.tag .dot{width:9px;height:9px;border-radius:2px}
+.empty{padding:40px 0;color:var(--muted)}
+
+/* article */
+article.post{max-width:720px;margin:0 auto;padding:36px 0 80px}
+.back{background:none;border:0;padding:0;color:var(--muted);cursor:pointer;font-size:15px;margin-bottom:20px}
+article.post h1{font-size:clamp(26px,4vw,36px);line-height:1.35;margin:10px 0 12px}
+.post .sub{color:var(--muted);font-size:15px;margin-bottom:28px;display:flex;gap:16px;flex-wrap:wrap}
+.post .lead{font-size:19px;font-weight:500;border-left:4px solid var(--steel);padding-left:16px;margin:0 0 28px}
+.body h2{font-size:22px;margin:36px 0 10px}
+.body p{margin:0 0 18px}
+.body ul,.body ol{padding-left:22px;margin:0 0 18px}
+.body li{margin-bottom:6px}
+.body strong{font-weight:700}
+.body blockquote{margin:0 0 18px;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.body .tw{overflow-x:auto;margin:0 0 18px}
+.body table{border-collapse:collapse;min-width:100%;font-size:15px}
+.body th,.body td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.body th{background:var(--surface)}
+.termbox{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--yellow);border-radius:8px;padding:18px 20px}
+.termbox span{font-size:13px;color:var(--muted)}
+.post .admin{display:flex;gap:8px;margin-top:28px}
+.navpost{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:40px}
+.navpost a{display:block;border:1px solid var(--line);border-radius:8px;padding:12px 14px;text-decoration:none;font-size:15px;background:var(--surface)}
+.navpost a span{display:block;font-size:13px;color:var(--muted)}
+
+/* editor */
+dialog{border:1px solid var(--line);border-radius:10px;padding:0;width:min(760px,96vw);max-height:92vh;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,35,.55)}
+.ed{padding:22px;display:grid;gap:12px}
+.ed h2{margin:0;font-size:20px}
+.ed label{font-size:14px;font-weight:600;display:grid;gap:4px}
+.ed input,.ed select,.ed textarea{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);width:100%}
+.ed textarea{min-height:240px;line-height:1.6;font-size:15px}
+.ed .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ed .hint{font-size:13px;color:var(--muted);margin:0}
+.ed .actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.ai{border:1px dashed var(--line);border-radius:8px;padding:12px;display:grid;gap:8px}
+.ai .r{display:flex;gap:8px}
+.ai .r input{flex:1}
+.msg{font-size:14px;color:var(--red);margin:0;min-height:1em}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;font-size:15px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr}
+  .row{grid-template-columns:72px minmax(0,1fr);gap:14px}
+  .row .d b{font-size:20px}
+  .ed .two{grid-template-columns:1fr}
+  .search{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#/"><i aria-hidden="true"><b style="background:var(--steel)"></b><b style="background:var(--red)"></b><b style="background:var(--yellow)"></b></i>하루무역</a>
+    <div class="grow"></div>
+    <input class="search" id="q" type="search" placeholder="글 검색" aria-label="글 검색">
+    <button class="btn ghost" id="exportBtn" hidden>글 데이터 내보내기</button>
+    <button class="btn" id="writeBtn" hidden>새 글 쓰기</button>
+  </div>
+</header>
+
+<main id="app" class="wrap"></main>
+
+<footer><div class="wrap">하루무역은 매일 한 편씩 무역 실무 지식을 정리합니다. 실제 거래 전에는 관세청, KOTRA, 거래 은행 등 공식 기관의 최신 기준을 꼭 확인하세요.</div></footer>
+
+<dialog id="editor">
+  <form class="ed" method="dialog" id="edForm">
+    <h2 id="edTitle">새 글 쓰기</h2>
+    <div class="two">
+      <label>카테고리<select id="fCat"></select></label>
+      <label>발행일<input id="fDate" type="date" required></label>
+    </div>
+    <label>제목<input id="fTitle" required maxlength="120"></label>
+    <label>한 줄 요약<input id="fSummary" maxlength="200"></label>
+    <label>본문
+      <textarea id="fBody" required></textarea>
+    </label>
+    <p class="hint">## 소제목, - 목록, 1. 번호 목록, **굵게**, &gt; 인용, | 표 | 를 쓸 수 있어요.</p>
+    <div class="two">
+      <label>오늘의 용어<input id="fWord" placeholder="예: 선하증권 (B/L)"></label>
+      <label>용어 뜻<input id="fMean"></label>
+    </div>
+    <p class="msg" id="edMsg"></p>
+    <div class="actions">
+      <button type="button" class="btn ghost" id="edCancel">취소</button>
+      <button type="button" class="btn" id="edSave">발행하기</button>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const CATS = [
+  {name:"무역 기초", color:"var(--slate)"},
+  {name:"인코텀즈", color:"var(--steel)"},
+  {name:"통관·관세", color:"var(--red)"},
+  {name:"무역결제", color:"var(--green)"},
+  {name:"물류·운송", color:"var(--teal)"},
+  {name:"FTA·원산지", color:"var(--yellow)"},
+  {name:"무역영어", color:"var(--plum)"},
+  {name:"시장 동향", color:"var(--rust)"}
+];
+const catColor = n => (CATS.find(c=>c.name===n)||CATS[0]).color;
+
+let posts = [], db = null, canWrite = false, sample = null, filter = "", query = "", loaded = false, editingId = null;
+const app = document.getElementById("app");
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")}
+function md(src){
+  const lines = String(src||"").replace(/\r/g,"").split("\n"); let out = [], i = 0;
+  while(i<lines.length){
+    const l = lines[i];
+    if(!l.trim()){i++;continue}
+    if(l.startsWith("## ")){out.push("<h2>"+inline(l.slice(3))+"</h2>");i++;continue}
+    if(l.startsWith("> ")){let b=[];while(i<lines.length&&lines[i].startsWith("> ")){b.push(inline(lines[i].slice(2)));i++}out.push("<blockquote>"+b.join("<br>")+"</blockquote>");continue}
+    if(/^\s*[-*] /.test(l)){let b=[];while(i<lines.length&&/^\s*[-*] /.test(lines[i])){b.push("<li>"+inline(lines[i].replace(/^\s*[-*] /,""))+"</li>");i++}out.push("<ul>"+b.join("")+"</ul>");continue}
+    if(/^\s*\d+\. /.test(l)){let b=[];while(i<lines.length&&/^\s*\d+\. /.test(lines[i])){b.push("<li>"+inline(lines[i].replace(/^\s*\d+\. /,""))+"</li>");i++}out.push("<ol>"+b.join("")+"</ol>");continue}
+    if(l.trim().startsWith("|")){
+      let rows=[];while(i<lines.length&&lines[i].trim().startsWith("|")){rows.push(lines[i].trim());i++}
+      rows = rows.filter(r=>!/^\|[\s:|-]+\|$/.test(r));
+      const cells = r=>r.replace(/^\||\|$/g,"").split("|").map(c=>inline(c.trim()));
+      const [h,...rest]=rows;
+      out.push('<div class="tw"><table><thead><tr>'+cells(h).map(c=>"<th>"+c+"</th>").join("")+"</tr></thead><tbody>"+rest.map(r=>"<tr>"+cells(r).map(c=>"<td>"+c+"</td>").join("")+"</tr>").join("")+"</tbody></table></div>");
+      continue;
+    }
+    let p=[];while(i<lines.length&&lines[i].trim()&&!/^(## |> |\s*[-*] |\s*\d+\. |\s*\|)/.test(lines[i])){p.push(inline(lines[i]));i++}
+    out.push("<p>"+p.join("<br>")+"</p>");
+  }
+  return out.join("");
+}
+const fmtDate = d => {const [y,m,dd]=d.split("-");return `${y}년 ${+m}월 ${+dd}일`};
+const todayStr = () => {const t=new Date();return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0")};
+const readMin = b => Math.max(1,Math.round(String(b||"").length/500));
+const sorted = () => [...posts].sort((a,b)=> (b.date||"").localeCompare(a.date||"") || (b.createdAt||0)-(a.createdAt||0));
+
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2200)}
+
+function streakInfo(){
+  const days = new Set(posts.map(p=>p.date));
+  let streak=0; const d=new Date();
+  if(!days.has(todayStr())) d.setDate(d.getDate()-1);
+  while(true){const s=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");if(days.has(s)){streak++;d.setDate(d.getDate()-1)}else break}
+  const cells=[]; const c=new Date(); c.setDate(c.getDate()-27);
+  for(let k=0;k<28;k++){const s=c.getFullYear()+"-"+String(c.getMonth()+1).padStart(2,"0")+"-"+String(c.getDate()).padStart(2,"0");const p=posts.find(x=>x.date===s);cells.push({s,p});c.setDate(c.getDate()+1)}
+  return {streak,cells};
+}
+
+function renderHome(){
+  const all = sorted();
+  if(!loaded){app.innerHTML='<p class="empty">글을 불러오는 중입니다.</p>';return}
+  const latest = all[0];
+  let hero = "";
+  if(latest){
+    const code = "TRDU "+latest.date.slice(2).replace(/-/g,"");
+    const {streak,cells} = streakInfo();
+    hero = `<section class="hero">
+      <a class="door" href="#/post/${encodeURIComponent(latest.id)}" style="background-color:${catColor(latest.category)}">
+        <div class="code">${code}<small>${esc(latest.category)}</small></div>
+        <div class="meta">${latest.date===todayStr()?"오늘 입항한 글":"가장 최근 글"}, ${fmtDate(latest.date)}</div>
+        <h1>${esc(latest.title)}</h1>
+        <p>${esc(latest.summary)}</p>
+        <span class="open">읽어 보기</span>
+      </a>
+      <div class="side">
+        ${latest.term&&latest.term.word?`<div class="card"><h2>오늘의 무역 용어</h2><p class="term-word">${esc(latest.term.word)}</p><p class="term-mean">${esc(latest.term.meaning)}</p></div>`:""}
+        <div class="card"><h2>최근 4주 발행 기록</h2>
+          <div class="cal">${cells.map(x=>`<span title="${x.s}${x.p?" "+esc(x.p.title):""}" style="${x.p?"background:"+catColor(x.p.category):""}"></span>`).join("")}</div>
+          <div class="streak"><span>연속 발행 <strong>${streak}일</strong></span><span>누적 <strong>${posts.length}편</strong></span></div>
+        </div>
+      </div>
+    </section>`;
+  } else {
+    hero = `<section class="empty"><h1 style="color:var(--ink);font-size:28px;margin:30px 0 8px">첫 글을 기다리고 있어요</h1><p>${canWrite?"오른쪽 위 ‘새 글 쓰기’로 오늘의 무역 공부를 시작해 보세요.":"아직 발행된 글이 없습니다. 곧 첫 글이 올라옵니다."}</p></section>`;
+  }
+  const list = all.filter(p=>(!filter||p.category===filter)&&(!query||(p.title+p.summary+p.body+(p.term?.word||"")).toLowerCase().includes(query.toLowerCase())));
+  app.innerHTML = hero + `
+    <nav class="cats" aria-label="카테고리">
+      <button class="chip" aria-pressed="${!filter}" data-cat="">전체</button>
+      ${CATS.map(c=>`<button class="chip" aria-pressed="${filter===c.name}" data-cat="${c.name}"><span class="dot" style="background:${c.color}"></span>${c.name}</button>`).join("")}
+    </nav>
+    <section class="list">
+      ${list.length?list.map(p=>`<a class="row" href="#/post/${encodeURIComponent(p.id)}">
+        <div class="d"><b>${p.date.slice(5).replace("-",".")}</b>${p.date.slice(0,4)}</div>
+        <div><span class="tag"><span class="dot" style="background:${catColor(p.category)}"></span>${esc(p.category)}</span>
+        <h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p></div></a>`).join(""):`<p class="empty">${query?"‘"+esc(query)+"’에 맞는 글이 없어요. 다른 단어로 찾아보세요.":"이 카테고리에는 아직 글이 없어요."}</p>`}
+    </section>`;
+  app.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{filter=b.dataset.cat;renderHome()});
+}
+
+function renderPost(id){
+  const all = sorted(); const idx = all.findIndex(p=>p.id===id); const p = all[idx];
+  if(!loaded){app.innerHTML='<p class="empty">글을 불러오는 중입니다.</p>';return}
+  if(!p){app.innerHTML='<p class="empty">글을 찾을 수 없어요. <a href="#/">목록으로 돌아가기</a></p>';return}
+  const newer = all[idx-1], older = all[idx+1];
+  app.innerHTML = `<article class="post">
+    <button class="back" onclick="location.hash='#/'">← 전체 글</button>
+    <span class="tag"><span class="dot" style="background:${catColor(p.category)}"></span>${esc(p.category)}</span>
+    <h1>${esc(p.title)}</h1>
+    <div class="sub"><span>${fmtDate(p.date)}</span><span>${readMin(p.body)}분 읽기</span></div>
+    ${p.summary?`<p class="lead">${esc(p.summary)}</p>`:""}
+    <div class="body">${md(p.body)}</div>
+    ${p.term&&p.term.word?`<div class="termbox"><span>오늘의 용어</span><p class="term-word">${esc(p.term.word)}</p><p class="term-mean">${esc(p.term.meaning)}</p></div>`:""}
+    ${canWrite?`<div class="admin"><button class="btn ghost small" id="editP">수정</button><button class="btn ghost small" id="delP">삭제</button></div>`:""}
+    <nav class="navpost">
+      ${older?`<a href="#/post/${encodeURIComponent(older.id)}"><span>이전 글</span>${esc(older.title)}</a>`:"<div></div>"}
+      ${newer?`<a href="#/post/${encodeURIComponent(newer.id)}" style="text-align:right"><span>다음 글</span>${esc(newer.title)}</a>`:"<div></div>"}
+    </nav>
+  </article>`;
+  if(canWrite){
+    document.getElementById("editP").onclick=()=>openEditor(p);
+    document.getElementById("delP").onclick=async()=>{
+      if(!confirm("이 글을 삭제할까요? 되돌릴 수 없습니다.")) return;
+      try{removePost(p.id);toast("삭제했어요");location.hash="#/"}catch(e){toast("삭제하지 못했어요: "+(e.message||e.code))}
+    };
+  }
+  window.scrollTo(0,0);
+}
+
+function route(){
+  const h = location.hash.replace(/^#/,"");
+  const m = h.match(/^\/post\/(.+)$/);
+  if(m) renderPost(decodeURIComponent(m[1])); else renderHome();
+}
+window.addEventListener("hashchange",route);
+document.getElementById("q").addEventListener("input",e=>{query=e.target.value.trim();if(location.hash.startsWith("#/post"))location.hash="#/";else renderHome()});
+
+/* editor */
+const dlg = document.getElementById("editor");
+const $ = id => document.getElementById(id);
+$("fCat").innerHTML = CATS.map(c=>`<option>${c.name}</option>`).join("");
+function openEditor(p){
+  editingId = p?p.id:null;
+  $("edTitle").textContent = p?"글 수정":"새 글 쓰기";
+  $("edSave").textContent = p?"수정 저장":"발행하기";
+  $("fCat").value = p?.category||CATS[1].name;
+  $("fDate").value = p?.date||todayStr();
+  $("fTitle").value = p?.title||""; $("fSummary").value = p?.summary||""; $("fBody").value = p?.body||"";
+  $("fWord").value = p?.term?.word||""; $("fMean").value = p?.term?.meaning||"";
+  $("edMsg").textContent = "";
+  dlg.showModal();
+}
+$("writeBtn").onclick=()=>openEditor(null);
+$("edCancel").onclick=()=>dlg.close();
+$("edSave").onclick=async()=>{
+  const title=$("fTitle").value.trim(), body=$("fBody").value.trim(), date=$("fDate").value;
+  if(!title||!body||!date){$("edMsg").textContent="제목, 본문, 발행일을 채워 주세요.";return}
+  const data={title,body,date,category:$("fCat").value,summary:$("fSummary").value.trim(),term:{word:$("fWord").value.trim(),meaning:$("fMean").value.trim()}};
+  $("edSave").disabled=true;
+  try{
+    if(editingId){const old=posts.find(x=>x.id===editingId);upsert(editingId,{...data,createdAt:old?.createdAt||Date.now()});toast("수정했어요")}
+    else{const ref={id:"p"+Date.now()};upsert(ref.id,{...data,createdAt:Date.now()});toast("발행했어요");location.hash="#/post/"+encodeURIComponent(ref.id)}
+    dlg.close();
+  }catch(e){$("edMsg").textContent = "저장하지 못했어요. 브라우저 저장 공간을 확인하세요."}
+  finally{$("edSave").disabled=false}
+};
+
+/* ===== 글 데이터 =====
+   매일 새 글을 추가하려면 아래 POSTS 배열에 글을 하나씩 추가하세요.
+   또는 주소 끝에 ?admin=1 을 붙여 열면 '새 글 쓰기' 화면이 나타납니다.
+   그 화면에서 쓴 글은 이 브라우저에만 저장되므로, '글 데이터 내보내기'로 복사해
+   이 POSTS 배열을 통째로 바꾼 뒤 파일을 다시 올리면 모든 방문자에게 보입니다. */
+const POSTS = [
+  {
+    "id": "fob-vs-cif",
+    "date": "2026-10-07",
+    "category": "인코텀즈",
+    "title": "FOB와 CIF, 운임은 달라도 위험은 같은 곳에서 넘어간다",
+    "summary": "가장 많이 쓰는 두 조건의 진짜 차이는 '누가 운임과 보험을 내느냐'이고, 위험 이전 시점은 똑같습니다.",
+    "body": "## 한 문장으로 정리하면\nFOB와 CIF 모두 **물품이 선적항에서 본선에 적재되는 순간** 위험이 매도인에서 매수인으로 넘어갑니다. 차이는 해상운임과 적하보험을 누가 부담하느냐뿐입니다.\n\n## 비용과 위험 비교\n| 항목 | FOB (본선인도) | CIF (운임·보험료 포함인도) |\n| --- | --- | --- |\n| 해상운임 | 매수인 | 매도인 |\n| 적하보험 | 매수인 (선택) | 매도인 (의무) |\n| 위험 이전 | 선적항 본선 적재 시 | 선적항 본선 적재 시 |\n| 표기 예 | FOB Busan | CIF Rotterdam |\n\n## 자주 하는 오해\n- CIF면 도착항까지 매도인이 책임진다고 생각하기 쉽지만, 운송 중 사고 위험은 이미 매수인에게 있습니다. 매도인은 매수인을 위해 보험만 들어 줄 뿐입니다.\n- 인코텀즈 2020 기준 CIF의 보험은 최소 담보 조건인 **ICC(C)**, 보험금액은 계약금액의 110%가 기본입니다. 더 넓은 담보가 필요하면 계약서에 따로 적어야 합니다.\n\n## 컨테이너 화물이라면\nFOB와 CIF는 원래 해상·내수로 운송용 조건입니다. 컨테이너는 보통 터미널(CY)에서 인도되기 때문에, 국제상업회의소(ICC)는 컨테이너 화물에 **FCA**나 **CIP**를 쓰도록 권장합니다.\n\n## 실무 체크포인트\n- 계약서에 인코텀즈 버전(예: Incoterms 2020)과 지정 항구를 반드시 함께 적기\n- CIF 거래라면 보험증권의 담보 조건과 피보험자 확인하기\n- 컨테이너 수출이면 FCA/CIP로 바꾸는 것이 유리한지 검토하기",
+    "term": {
+      "word": "인코텀즈 (Incoterms)",
+      "meaning": "국제상업회의소(ICC)가 정한 무역거래조건 규칙. 매도인과 매수인 사이의 비용 부담과 위험 이전 시점을 정해 준다. 현재 많이 쓰는 버전은 2020년판이다."
+    },
+    "createdAt": 5
+  },
+  {
+    "id": "hs-code",
+    "date": "2026-10-06",
+    "category": "통관·관세",
+    "title": "HS코드 하나가 관세율과 수출입 요건을 결정한다",
+    "summary": "HS코드를 잘못 잡으면 관세를 더 내거나 가산세를 맞을 수 있습니다. 구조와 찾는 법을 정리했습니다.",
+    "body": "## HS코드란\nHS(Harmonized System)코드는 세계관세기구(WCO)가 만든 국제 상품분류 체계입니다. **앞 6자리는 전 세계 공통**이고, 그 뒤는 나라마다 세분합니다. 우리나라는 10자리 **HSK**를 씁니다.\n\n## 자릿수 구조\n| 자리 | 이름 | 예시 (커피) |\n| --- | --- | --- |\n| 2자리 | 류(Chapter) | 09 커피·차·향신료 |\n| 4자리 | 호(Heading) | 0901 커피 |\n| 6자리 | 소호(Sub-heading) | 국제 공통 단위 |\n| 10자리 | HSK | 국내 세율 적용 단위 |\n\n## HS코드가 정하는 것\n- **관세율**: 기본세율, WTO 협정세율, FTA 협정세율 모두 HS코드 기준\n- **수출입 요건**: 식품·전기용품처럼 별도 확인이 필요한 품목인지 여부\n- **FTA 원산지 판정**: 세번변경기준은 HS코드가 바뀌었는지로 판단\n\n## 어떻게 찾을까\n1. 관세청 UNI-PASS나 관세법령정보포털에서 품명으로 검색\n2. 비슷한 품목의 품목분류 사례 확인\n3. 애매하면 관세사와 상의하거나 관세청 **품목분류 사전심사**를 신청\n\n## 실무 체크포인트\n- 수출자가 알려 준 6자리 코드를 그대로 믿지 말고 수입국 기준 세분 코드를 다시 확인\n- 같은 제품이라도 재질·용도에 따라 코드가 갈릴 수 있음\n- 최신 세율은 매년 바뀔 수 있으니 신고 직전에 재확인",
+    "term": {
+      "word": "품목분류 사전심사",
+      "meaning": "수출입 전에 물품의 HS코드를 관세청에 미리 심사받아 확정하는 제도. 분류 분쟁과 추징 위험을 줄일 수 있다."
+    },
+    "createdAt": 4
+  },
+  {
+    "id": "letter-of-credit",
+    "date": "2026-10-05",
+    "category": "무역결제",
+    "title": "신용장(L/C) 거래, 은행은 물건이 아니라 서류를 본다",
+    "summary": "신용장의 흐름을 네 당사자와 일곱 단계로 따라가 보고, 하자 서류를 피하는 법을 알아봅니다.",
+    "body": "## 신용장이 필요한 이유\n처음 거래하는 상대를 믿기 어려울 때, **수입자의 은행이 대금 지급을 약속**해 주는 것이 신용장입니다. 수출자는 조건에 맞는 서류만 내면 대금을 받을 수 있습니다.\n\n## 등장인물\n- **개설의뢰인**: 수입자\n- **개설은행**: 수입자의 거래 은행, 지급을 약속하는 쪽\n- **통지은행**: 수출국에서 신용장을 수출자에게 전달하는 은행\n- **수익자**: 수출자\n\n## 흐름\n1. 매매계약 체결 (결제 조건: L/C)\n2. 수입자가 개설은행에 신용장 개설 의뢰\n3. 개설은행이 통지은행을 거쳐 수출자에게 신용장 통지\n4. 수출자가 물품 선적\n5. 수출자가 선하증권, 상업송장 등 서류를 은행에 제시\n6. 은행이 서류를 심사하고 대금 지급 또는 매입\n7. 수입자가 대금을 결제하고 서류를 받아 화물 인수\n\n## 서류 일치의 원칙\n신용장 거래는 국제 규칙인 **UCP 600**을 따릅니다. 은행은 물품을 직접 확인하지 않고, 서류가 신용장 조건과 일치하는지만 봅니다. 은행의 서류 심사 기간은 제시일 다음 날부터 최대 5 은행영업일입니다.\n\n## 실무 체크포인트\n- 신용장을 받자마자 선적기한, 유효기일, 요구서류를 계약서와 대조하기\n- 품명, 수량, 단가 표기를 서류마다 똑같이 맞추기\n- 이행할 수 없는 조건이 있으면 선적 전에 조건변경(Amendment) 요청",
+    "term": {
+      "word": "하자 (Discrepancy)",
+      "meaning": "제시된 서류가 신용장 조건과 일치하지 않는 상태. 하자가 있으면 은행이 지급을 거절하거나 수입자의 수락을 받아야 해서 대금 회수가 늦어진다."
+    },
+    "createdAt": 3
+  },
+  {
+    "id": "bill-of-lading",
+    "date": "2026-10-04",
+    "category": "물류·운송",
+    "title": "선하증권(B/L)의 세 가지 얼굴",
+    "summary": "B/L은 영수증이면서 계약서이고, 화물을 찾을 수 있는 권리 그 자체입니다.",
+    "body": "## B/L이 하는 일\n선하증권(Bill of Lading)은 운송인이 화물을 받았다는 증거로 발행하는 서류입니다. 세 가지 기능을 함께 가집니다.\n\n- **화물 수령증**: 운송인이 이 화물을 이 상태로 받았다는 증명\n- **운송계약의 증거**: 운송 조건이 뒷면 약관에 담겨 있음\n- **권리증권**: 원본 B/L을 가진 사람이 도착지에서 화물을 찾을 수 있음\n\n## 원본은 보통 3부\nB/L 원본은 흔히 3부(Full Set)로 발행되고, 그중 한 부로 화물을 찾으면 나머지는 효력을 잃습니다. 그래서 신용장 거래에서는 원본 전부를 요구하는 경우가 많습니다.\n\n## 헷갈리는 B/L 종류\n| 종류 | 특징 |\n| --- | --- |\n| Master B/L | 선사가 포워더에게 발행 |\n| House B/L | 포워더가 화주에게 발행 |\n| Surrender B/L | 원본 없이 화물 인도가 가능하도록 처리한 B/L |\n| Sea Waybill | 권리증권 기능이 없는 운송장, 지정 수하인이 인수 |\n\n## 실무 체크포인트\n- 신용장 거래라면 수하인(Consignee) 칸이 'To order of 은행' 형태인지 확인\n- 단거리 운송은 서류보다 배가 먼저 도착할 수 있으니 Surrender나 Sea Waybill 검토\n- On board 날짜가 신용장의 선적기한 안인지 확인",
+    "term": {
+      "word": "선하증권 (B/L, Bill of Lading)",
+      "meaning": "해상 운송인이 화물을 받고 발행하는 서류. 화물 수령증, 운송계약의 증거, 화물 인도 청구권을 나타내는 권리증권 역할을 한다."
+    },
+    "createdAt": 2
+  },
+  {
+    "id": "fta-origin",
+    "date": "2026-10-03",
+    "category": "FTA·원산지",
+    "title": "FTA 특혜관세, 원산지증명서가 있어야 받는다",
+    "summary": "FTA 세율을 적용받으려면 '우리 물품이 원산지 기준을 충족한다'는 증명이 필요합니다.",
+    "body": "## FTA 혜택의 조건\nFTA 협정세율은 자동으로 적용되지 않습니다. 물품이 협정의 **원산지 결정기준**을 충족하고, 그 사실을 **원산지증명서**로 증명해야 합니다.\n\n## 원산지 결정기준 세 가지\n- **완전생산기준**: 한 나라에서 모두 얻거나 생산한 물품 (농수산물, 광물 등)\n- **세번변경기준**: 수입 원재료의 HS코드와 완제품의 HS코드가 일정 단위 이상 달라졌는지\n- **부가가치기준**: 역내에서 붙은 부가가치 비율이 기준 이상인지\n\n품목마다 어떤 기준을 쓰는지는 협정의 품목별 원산지 규정을 확인해야 합니다.\n\n## 발급 방식은 협정마다 다르다\n| 방식 | 설명 | 예 |\n| --- | --- | --- |\n| 기관발급 | 세관, 상공회의소 등이 발급 | 한-중 FTA, 한-아세안 FTA |\n| 자율발급 | 수출자나 생산자가 직접 작성 | 한-미 FTA, 한-EU FTA |\n\n한-EU FTA는 일정 금액(6,000유로)을 넘는 수출이라면 **인증수출자**만 원산지 신고를 할 수 있습니다.\n\n## 실무 체크포인트\n- 원재료 명세와 공급자의 원산지 확인서를 미리 모아 두기\n- 원산지 증빙 서류는 협정과 국내법이 정한 기간 동안 보관 (보통 5년, 최신 기준 확인 필요)\n- 수입국 세관의 사후 원산지 검증에 대비해 판정 근거를 문서로 남기기",
+    "term": {
+      "word": "인증수출자",
+      "meaning": "원산지 관리 능력을 관세청에서 인증받은 수출자. 원산지증명 절차가 간소화되고, 한-EU FTA처럼 일정 금액 이상 거래에서 자율발급을 하려면 이 인증이 필요하다."
+    },
+    "createdAt": 1
+  }
+];
+
+const STORE_KEY = "harumuyeok-posts";
+canWrite = new URLSearchParams(location.search).get("admin") === "1";
+function loadPosts(){
+  let local = null;
+  if(canWrite){ try{ local = JSON.parse(localStorage.getItem(STORE_KEY)||"null"); }catch(e){ local = null; } }
+  posts = Array.isArray(local) ? local : POSTS.map(p=>({...p}));
+  loaded = true;
+}
+function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(posts)); }catch(e){ throw e; } route(); }
+function upsert(id,data){ const i = posts.findIndex(p=>p.id===id); const doc = {id,...data}; if(i>=0) posts[i]=doc; else posts.push(doc); persist(); }
+function removePost(id){ posts = posts.filter(p=>p.id!==id); persist(); }
+
+$("writeBtn").hidden = !canWrite;
+$("exportBtn").hidden = !canWrite;
+$("exportBtn").onclick = async()=>{
+  const text = "const POSTS = " + JSON.stringify(sorted(), null, 2) + ";";
+  try{ await navigator.clipboard.writeText(text); toast("복사했어요. HTML 파일의 POSTS 부분에 붙여 넣으세요."); }
+  catch(e){ const w = window.open("","_blank"); if(w){ w.document.body.innerHTML = "<pre style='white-space:pre-wrap'></pre>"; w.document.querySelector("pre").textContent = text; } }
+};
+loadPosts();
+route();
+</script>
+</body>
+</html>
